@@ -1,15 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import { User, Module, DailyTask, UserRole } from './types';
-import Auth from './components/Auth';
-import Dashboard from './components/Dashboard';
-import TeacherDashboard from './components/TeacherDashboard';
-import ModuleView from './components/ModuleView';
-import Assessment from './components/Assessment';
-import { CURRICULUM } from './constants';
+import { User, Module, DailyTask, UserRole } from './types.ts';
+import Auth from './components/Auth.tsx';
+import Dashboard from './components/Dashboard.tsx';
+import TeacherDashboard from './components/TeacherDashboard.tsx';
+import ModuleView from './components/ModuleView.tsx';
+import Assessment from './components/Assessment.tsx';
+import { CURRICULUM } from './constants.ts';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SkillSynthLogo } from './components/Logo';
-import { Sun, Moon, LayoutDashboard, GraduationCap } from 'lucide-react';
+import { SkillSynthLogo } from './components/Logo.tsx';
+import { Sun, Moon } from 'lucide-react';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -194,7 +194,6 @@ const App: React.FC = () => {
                       const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                       const history = [...(user.scoreHistory || [])];
                       
-                      // Calculate blended scores (weighted average with past performance)
                       const blendedScores = {
                         communication: Math.round(((user.scores.communication || 0) + (newScores.communication || 0)) / (user.scores.communication ? 2 : 1)) || (newScores.communication || 0),
                         confidence: Math.round(((user.scores.confidence || 0) + (newScores.confidence || 0)) / (user.scores.confidence ? 2 : 1)) || (newScores.confidence || 0),
@@ -210,7 +209,7 @@ const App: React.FC = () => {
                       const updatedUser = { 
                         ...user, 
                         scores: blendedScores,
-                        scoreHistory: history.slice(-10), // Keep last 10 for history
+                        scoreHistory: history.slice(-10),
                         askedQuestions: Array.from(new Set([...(user.askedQuestions || []), ...sessionQuestions])),
                         streak: user.streak + (activeDailyTask ? 1 : 0)
                       };
@@ -229,13 +228,6 @@ const App: React.FC = () => {
       <footer className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 py-12 px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
           <SkillSynthLogo className="opacity-50 grayscale hover:grayscale-0 dark:grayscale dark:invert-[0.2] transition-all" />
-          <div className="flex flex-col items-center md:items-start">
-            <p className="text-slate-300 dark:text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">School-Safe • AI-Enhanced • Private Profile</p>
-            <div className="flex space-x-4 mt-2">
-               <span className="text-[9px] font-bold text-blue-500 uppercase tracking-widest cursor-pointer hover:underline">Privacy Policy</span>
-               <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest cursor-pointer hover:underline">Safety Notice</span>
-            </div>
-          </div>
           <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">© 2024. Building future leaders.</p>
         </div>
       </footer>
@@ -244,7 +236,7 @@ const App: React.FC = () => {
 };
 
 const ThemeToggle: React.FC<{ isDark: boolean, onToggle: () => void }> = ({ isDark, onToggle }) => (
-  <button onClick={onToggle} className="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-brand-blue dark:hover:text-brand-blue transition-all" aria-label="Toggle Theme">
+  <button onClick={onToggle} className="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-brand-blue dark:hover:text-brand-blue transition-all">
     <AnimatePresence mode="wait">
       {isDark ? (
         <motion.div key="moon" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>

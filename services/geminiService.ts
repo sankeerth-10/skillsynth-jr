@@ -1,10 +1,15 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { Module } from "../types";
+import { Module } from "../types.ts";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Handle missing API key gracefully during top-level execution
+const getAIClient = () => {
+  const apiKey = process.env.API_KEY || "";
+  return new GoogleGenAI({ apiKey });
+};
 
 export const adaptModuleContent = async (module: Module, grade: string) => {
+  const ai = getAIClient();
   const gradeNum = parseInt(grade) || 8;
   
   const systemInstruction = `
@@ -43,6 +48,7 @@ export const adaptModuleContent = async (module: Module, grade: string) => {
 };
 
 export const evolveModuleContent = async (module: Module, grade: string) => {
+  const ai = getAIClient();
   const systemInstruction = `
     You are an AI Mastery Architect. The student has mastered the basic version of "${module.title}".
     Generate "Level 2: Advanced Concepts" for this module.
@@ -92,6 +98,7 @@ export const evolveModuleContent = async (module: Module, grade: string) => {
 };
 
 export const generateAdaptiveQuestion = async (history: { question: string, answer: string }[], step: number, pastQuestions: string[] = [], grade: string = '8') => {
+  const ai = getAIClient();
   const systemInstruction = `
     You are a friendly AI Mentor for school kids (Grades 6-12). 
     Your goal is to ask EASY, simple, and very short soft-skill questions.
@@ -102,11 +109,6 @@ export const generateAdaptiveQuestion = async (history: { question: string, answ
     3. Use very easy words. No complex jargon.
     4. Be super encouraging and kind.
     5. Avoid repeating themes or previous questions: ${pastQuestions.slice(-20).join(' | ')}
-    
-    QUESTION STYLE:
-    - "If you saw a new student sitting alone at lunch, what's a friendly way to say hi?"
-    - "Imagine your friend is nervous about a big test. What kind thing would you say?"
-    - "If a group project is hard, how do you help your teammates feel better?"
     
     Return ONLY the question string.
   `;
@@ -132,6 +134,7 @@ export const generateAdaptiveQuestion = async (history: { question: string, answ
 };
 
 export const getAssessmentFeedback = async (history: { question: string, answer: string }[]) => {
+  const ai = getAIClient();
   const systemInstruction = `
     Analyze the student's conversation. Be an encouraging AI Coach.
     Scores must be 1-100. Give high scores (70-90) to keep them motivated!
@@ -210,7 +213,7 @@ export const getAssessmentFeedback = async (history: { question: string, answer:
     return JSON.parse(response.text);
   } catch (error) {
     return {
-      feedback: "You're doing great! Your communication is very friendly.",
+      feedback: "You're doing great!",
       scores: { communication: 85, confidence: 80, teamwork: 82, problemSolving: 78 },
       biometrics: { eyeContact: 88, voiceModulation: 82, facialExpression: 85 },
       strengths: [{ title: "Friendly Tone", description: "You are very welcoming." }],
