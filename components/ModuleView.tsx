@@ -40,7 +40,8 @@ const ModuleView: React.FC<ModuleViewProps> = ({ module, user, onBack, onComplet
   const [shake, setShake] = useState(false);
   const [isEvolving, setIsEvolving] = useState(false);
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // Fix: Replaced NodeJS.Timeout with ReturnType<typeof setInterval> to resolve "Cannot find namespace 'NodeJS'" error in browser environment.
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const performSynthesis = async () => {
@@ -166,7 +167,7 @@ const ModuleView: React.FC<ModuleViewProps> = ({ module, user, onBack, onComplet
       <div className="max-w-4xl mx-auto px-6 py-12">
         <AnimatePresence mode="wait">
           {viewState === 'content' && (
-            <motion.div key="content" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-12 pb-20">
+            <motion.div key="content" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-12 pb-20">
               <button onClick={onBack} className="group flex items-center space-x-2 text-slate-400 dark:text-slate-500 font-semibold mb-12 hover:text-blue-600 transition-all">
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 <span>Return to Hub</span>
