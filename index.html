@@ -10,24 +10,16 @@
     <meta name="title" content="SkillSynth Jr - AI Soft Skill Mentor" />
     <meta name="description" content="A school-exclusive platform for students in Grades 6–12 to master communication, confidence, and leadership through AI-assisted micro-tasks." />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://skillsynth-jr.netlify.app/" />
-    <meta property="og:title" content="SkillSynth Jr - Build Your Future" />
-    <meta property="og:description" content="The school-safe platform for soft-skill development. Build your Neural Skill DNA today." />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="SkillSynth Jr - AI Soft Skill Mentor" />
-    <meta property="twitter:description" content="Master communication and leadership with AI-powered feedback tailored for students." />
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     
     <script>
       // Polyfill process.env before any modules load
-      window.process = { env: { API_KEY: "" } };
+      window.process = { 
+        env: { 
+          API_KEY: ""
+        } 
+      };
 
       tailwind.config = {
         darkMode: 'class',
@@ -69,21 +61,22 @@
     </style>
 
     <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.0.0",
-        "react/": "https://esm.sh/react@19.0.0/",
-        "react-dom": "https://esm.sh/react-dom@19.0.0",
-        "react-dom/": "https://esm.sh/react-dom@19.0.0/",
-        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-        "@google/genai": "https://esm.sh/@google/genai@1.34.0",
-        "recharts": "https://esm.sh/recharts@3.6.0?external=react,react-dom",
-        "framer-motion": "https://esm.sh/framer-motion@11.11.11?external=react,react-dom",
-        "lucide-react": "https://esm.sh/lucide-react@0.454.0?external=react,react-dom",
-        "jspdf": "https://esm.sh/jspdf@2.5.1"
-      }
-    }
-    </script>
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react/": "https://esm.sh/react@19.0.0/",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/": "https://esm.sh/react-dom@19.0.0/",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@1.34.0",
+    "recharts": "https://esm.sh/recharts@3.6.0?external=react,react-dom",
+    "framer-motion": "https://esm.sh/framer-motion@11.11.11?external=react,react-dom",
+    "lucide-react": "https://esm.sh/lucide-react@0.454.0?external=react,react-dom",
+    "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.89.0"
+  }
+}
+</script>
   </head>
   <body>
     <div id="root"></div>

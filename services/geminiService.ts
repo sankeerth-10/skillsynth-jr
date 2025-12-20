@@ -2,14 +2,11 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Module } from "../types.ts";
 
-// Handle missing API key gracefully during top-level execution
-const getAIClient = () => {
-  const apiKey = process.env.API_KEY || "";
-  return new GoogleGenAI({ apiKey });
-};
+// Initialize Gemini AI with API key from environment variables as per guidelines
+// Always use const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const adaptModuleContent = async (module: Module, grade: string) => {
-  const ai = getAIClient();
   const gradeNum = parseInt(grade) || 8;
   
   const systemInstruction = `
@@ -39,7 +36,8 @@ export const adaptModuleContent = async (module: Module, grade: string) => {
       }
     });
     
-    const adaptedData = JSON.parse(response.text);
+    // Access response.text property directly (not a method call)
+    const adaptedData = JSON.parse(response.text || "{}");
     return { ...module, ...adaptedData };
   } catch (error) {
     console.error("Content Adaptation Error:", error);
@@ -48,7 +46,6 @@ export const adaptModuleContent = async (module: Module, grade: string) => {
 };
 
 export const evolveModuleContent = async (module: Module, grade: string) => {
-  const ai = getAIClient();
   const systemInstruction = `
     You are an AI Mastery Architect. The student has mastered the basic version of "${module.title}".
     Generate "Level 2: Advanced Concepts" for this module.
@@ -90,7 +87,8 @@ export const evolveModuleContent = async (module: Module, grade: string) => {
       }
     });
     
-    return JSON.parse(response.text);
+    // Access response.text property directly
+    return JSON.parse(response.text || "{}");
   } catch (error) {
     console.error("Module Evolution Error:", error);
     return null;
@@ -98,7 +96,6 @@ export const evolveModuleContent = async (module: Module, grade: string) => {
 };
 
 export const generateAdaptiveQuestion = async (history: { question: string, answer: string }[], step: number, pastQuestions: string[] = [], grade: string = '8') => {
-  const ai = getAIClient();
   const systemInstruction = `
     You are a friendly AI Mentor for school kids (Grades 6-12). 
     Your goal is to ask EASY, simple, and very short soft-skill questions.
@@ -127,6 +124,7 @@ export const generateAdaptiveQuestion = async (history: { question: string, answ
         temperature: 0.8, 
       }
     });
+    // Access response.text property directly
     return response.text?.trim().replace(/^"/, '').replace(/"$/, '') || "How would you help a friend who is stuck on a difficult school problem?";
   } catch (error) {
     return "What is your favorite way to work with a team on a school project?";
@@ -134,7 +132,6 @@ export const generateAdaptiveQuestion = async (history: { question: string, answ
 };
 
 export const getAssessmentFeedback = async (history: { question: string, answer: string }[]) => {
-  const ai = getAIClient();
   const systemInstruction = `
     Analyze the student's conversation. Be an encouraging AI Coach.
     Scores must be 1-100. Give high scores (70-90) to keep them motivated!
@@ -145,7 +142,8 @@ export const getAssessmentFeedback = async (history: { question: string, answer:
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      // Complex assessment task uses pro model
+      model: "gemini-3-pro-preview",
       contents: `Provide warm feedback for this student transcript:\n\n${transcript}`,
       config: {
         systemInstruction,
@@ -210,7 +208,8 @@ export const getAssessmentFeedback = async (history: { question: string, answer:
       }
     });
 
-    return JSON.parse(response.text);
+    // Access response.text property directly
+    return JSON.parse(response.text || "{}");
   } catch (error) {
     return {
       feedback: "You're doing great!",
