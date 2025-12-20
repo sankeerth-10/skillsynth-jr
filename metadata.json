@@ -1,0 +1,8 @@
+{
+  "name": "SkillSynth-jr",
+  "description": "An AI-assisted soft skill development platform for students in Grades 6–12, providing structured 1-month courses, micro-tasks, and assessment feedback.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

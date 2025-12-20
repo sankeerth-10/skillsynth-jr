@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillSynth Jr - Build Your Future</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                blue: '#0EA5E9',
+                indigo: '#4338CA',
+                orange: '#F97316',
+                purple: '#8B5CF6',
+              }
+            },
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              display: ['Orbitron', 'sans-serif'],
+            },
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Smooth transitions for theme switching */
+      * {
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #FAFAFF;
+        color: #1E293B;
+        overflow-x: hidden;
+      }
+
+      .dark body {
+        background-color: #020617;
+        color: #F8FAFC;
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .dark .glass-effect {
+        background: rgba(15, 23, 42, 0.8);
+        border-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #E2E8F0;
+        border-radius: 20px;
+      }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #1E293B;
+      }
+
+      .logo-gradient-text {
+        background: linear-gradient(135deg, #0EA5E9 0%, #4338CA 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .jr-badge {
+        background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+      }
+      .premium-shadow {
+        box-shadow: 0 10px 40px -10px rgba(14, 165, 233, 0.15);
+      }
+      .dark .premium-shadow {
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+      }
+
+      .pro-glow-text {
+        color: #fff;
+        text-shadow: 
+          0 0 7px #fff,
+          0 0 10px #fff,
+          0 0 21px #fff,
+          0 0 42px #0EA5E9,
+          0 0 82px #0EA5E9,
+          0 0 92px #0EA5E9,
+          0 0 102px #0EA5E9,
+          0 0 151px #0EA5E9;
+        animation: pulse-glow 2s infinite alternate;
+      }
+
+      @keyframes pulse-glow {
+        from {
+          opacity: 0.8;
+          text-shadow: 0 0 10px #fff, 0 0 20px #0EA5E9;
+        }
+        to {
+          opacity: 1;
+          text-shadow: 0 0 20px #fff, 0 0 30px #4338CA, 0 0 40px #4338CA;
+        }
+      }
+
+      .badge-pop {
+        animation: pop-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      @keyframes pop-in {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+    </style>
+    <script>
+      // Apply theme immediately to avoid flash - Default to Dark
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || !savedTheme) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "framer-motion": "https://esm.sh/framer-motion@^11.11.11",
+    "lucide-react": "https://esm.sh/lucide-react@^0.454.0",
+    "jspdf": "https://esm.sh/jspdf@^2.5.1"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
