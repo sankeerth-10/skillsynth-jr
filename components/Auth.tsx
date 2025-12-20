@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { User, UserRole } from '../types';
-import { SkillSynthLogo } from './Logo';
+import { User, UserRole } from '../types.ts';
+import { SkillSynthLogo } from './Logo.tsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User as UserIcon, 

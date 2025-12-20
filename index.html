@@ -4,16 +4,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SkillSynth Jr - Build Your Future</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>SkillSynth Jr - AI Soft Skill Mentor for Students</title>
+    <meta name="title" content="SkillSynth Jr - AI Soft Skill Mentor" />
+    <meta name="description" content="A school-exclusive platform for students in Grades 6–12 to master communication, confidence, and leadership through AI-assisted micro-tasks." />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://skillsynth-jr.netlify.app/" />
+    <meta property="og:title" content="SkillSynth Jr - Build Your Future" />
+    <meta property="og:description" content="The school-safe platform for soft-skill development. Build your Neural Skill DNA today." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="SkillSynth Jr - AI Soft Skill Mentor" />
+    <meta property="twitter:description" content="Master communication and leadership with AI-powered feedback tailored for students." />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    
     <script>
-      // Initialize a robust process.env polyfill
-      window.process = {
-        env: {
-          API_KEY: "" 
-        }
-      };
+      // Polyfill process.env before any modules load
+      window.process = { env: { API_KEY: "" } };
 
       tailwind.config = {
         darkMode: 'class',
@@ -51,7 +65,9 @@
       .custom-scrollbar::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 20px; }
       .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #1E293B; }
       .logo-gradient-text { background: linear-gradient(135deg, #0EA5E9 0%, #4338CA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .jr-badge { background: linear-gradient(45deg, #F97316, #EA580C); }
     </style>
+
     <script type="importmap">
     {
       "imports": {
