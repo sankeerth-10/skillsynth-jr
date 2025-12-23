@@ -18,6 +18,9 @@ export interface User {
     confidence: number;
     teamwork: number;
     problemSolving: number;
+    leadership?: number;
+    empathy?: number;
+    resilience?: number;
   };
   scoreHistory?: {
     date: string;

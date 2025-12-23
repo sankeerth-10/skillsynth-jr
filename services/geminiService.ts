@@ -2,21 +2,16 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Module } from "../types.ts";
 
-// Initialize Gemini AI with API key from environment variables as per guidelines
-// Always use const ai = new GoogleGenAI({apiKey: process.env.API_KEY});
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const adaptModuleContent = async (module: Module, grade: string) => {
   const gradeNum = parseInt(grade) || 8;
-  
   const systemInstruction = `
     You are an AI Education Specialist. Your task is to adapt a soft-skills lesson for a student in Grade ${gradeNum}.
     Return a JSON object with updated 'content', 'learningPoints', and 'examples'.
     Ensure 'learningPoints' has exactly 8 items.
   `;
-
   const prompt = `Adapt this module for a Grade ${gradeNum} student:\n${JSON.stringify(module)}`;
-
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
@@ -35,8 +30,6 @@ export const adaptModuleContent = async (module: Module, grade: string) => {
         }
       }
     });
-    
-    // Access response.text property directly (not a method call)
     const adaptedData = JSON.parse(response.text || "{}");
     return { ...module, ...adaptedData };
   } catch (error) {
@@ -50,11 +43,9 @@ export const evolveModuleContent = async (module: Module, grade: string) => {
     You are an AI Mastery Architect. The student has mastered the basic version of "${module.title}".
     Generate "Level 2: Advanced Concepts" for this module.
     Focus on complex scenarios, nuance, and professional-level soft skills appropriate for Grade ${grade}.
-    Return a JSON object with a NEW 'title' (e.g., "${module.title} II: Advanced Tactics"), 'content', 'learningPoints', and 'quizzes'.
+    Return a JSON object with a NEW 'title', 'content', 'learningPoints', and 'quizzes'.
   `;
-
   const prompt = `Evolve this module to an advanced level:\n${JSON.stringify(module)}`;
-
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
@@ -86,8 +77,6 @@ export const evolveModuleContent = async (module: Module, grade: string) => {
         }
       }
     });
-    
-    // Access response.text property directly
     return JSON.parse(response.text || "{}");
   } catch (error) {
     console.error("Module Evolution Error:", error);
@@ -98,56 +87,41 @@ export const evolveModuleContent = async (module: Module, grade: string) => {
 export const generateAdaptiveQuestion = async (history: { question: string, answer: string }[], step: number, pastQuestions: string[] = [], grade: string = '8') => {
   const systemInstruction = `
     You are a friendly AI Mentor for school kids (Grades 6-12). 
-    Your goal is to ask EASY, simple, and very short soft-skill questions.
-    
-    CRITICAL RULES:
-    1. Ask ONLY ONE simple question.
-    2. Make the scenario very relatable to school life (friends, lunch, sports, projects).
-    3. Use very easy words. No complex jargon.
-    4. Be super encouraging and kind.
-    5. Avoid repeating themes or previous questions: ${pastQuestions.slice(-20).join(' | ')}
-    
-    Return ONLY the question string.
+    Ask ONLY ONE simple, short, relatable soft-skill question.
   `;
-
   const context = history.map(h => `Q: ${h.question}\nA: ${h.answer}`).join('\n\n');
   const prompt = history.length === 0 
-    ? `Ask an EASY, friendly first question for a Grade ${grade} student. Focus on communication.` 
-    : `The student said:\n${context}\n\nAsk the NEXT easy question (Step ${step + 1} of 5) about a different skill like confidence or teamwork.`;
-
+    ? `Ask a first easy question for a Grade ${grade} student.` 
+    : `The student said:\n${context}\n\nAsk the NEXT easy question (Step ${step + 1}).`;
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
-      config: { 
-        systemInstruction,
-        temperature: 0.8, 
-      }
+      config: { systemInstruction, temperature: 0.8 }
     });
-    // Access response.text property directly
-    return response.text?.trim().replace(/^"/, '').replace(/"$/, '') || "How would you help a friend who is stuck on a difficult school problem?";
+    return response.text?.trim().replace(/^"/, '').replace(/"$/, '') || "How do you handle a tough school project?";
   } catch (error) {
-    return "What is your favorite way to work with a team on a school project?";
+    return "What is your favorite way to work with a team?";
   }
 };
 
 export const getAssessmentFeedback = async (history: { question: string, answer: string }[]) => {
   const systemInstruction = `
-    Analyze the student's conversation. Be an encouraging AI Coach.
-    Scores must be 1-100. Give high scores (70-90) to keep them motivated!
-    Return a structured JSON object.
+    Perform a HIGH-SPEED NEURAL AUDIT. Be concise but deep. 
+    Use the FASTEST analysis possible.
+    Evaluate: Communication, Confidence, Teamwork, Problem Solving, Leadership, Empathy, Resilience.
+    Analyze Vocal Dynamics: Pace (1-100), Energy (1-100), Fillers.
+    Generate a 3-step actionable Growth Roadmap.
   `;
-
   const transcript = history.map(h => `Q: ${h.question}\nA: ${h.answer}`).join('\n\n');
-
   try {
     const response = await ai.models.generateContent({
-      // Complex assessment task uses pro model
-      model: "gemini-3-pro-preview",
-      contents: `Provide warm feedback for this student transcript:\n\n${transcript}`,
+      model: "gemini-3-flash-preview", // Switched to FLASH for speed
+      contents: `Audit this transcript immediately:\n\n${transcript}`,
       config: {
         systemInstruction,
         responseMimeType: "application/json",
+        thinkingConfig: { thinkingBudget: 0 }, // Disable thinking for ultra-low latency
         responseSchema: {
           type: Type.OBJECT,
           properties: {
@@ -158,67 +132,53 @@ export const getAssessmentFeedback = async (history: { question: string, answer:
                 communication: { type: Type.NUMBER },
                 confidence: { type: Type.NUMBER },
                 teamwork: { type: Type.NUMBER },
-                problemSolving: { type: Type.NUMBER }
+                problemSolving: { type: Type.NUMBER },
+                leadership: { type: Type.NUMBER },
+                empathy: { type: Type.NUMBER },
+                resilience: { type: Type.NUMBER }
               },
-              required: ["communication", "confidence", "teamwork", "problemSolving"]
+              required: ["communication", "confidence", "teamwork", "problemSolving", "leadership", "empathy", "resilience"]
             },
-            biometrics: {
+            speechAnalysis: {
               type: Type.OBJECT,
               properties: {
-                eyeContact: { type: Type.NUMBER },
-                voiceModulation: { type: Type.NUMBER },
-                facialExpression: { type: Type.NUMBER }
+                paceScore: { type: Type.NUMBER },
+                paceDescription: { type: Type.STRING },
+                energyLevel: { type: Type.NUMBER },
+                fillerWordsLevel: { type: Type.STRING }
               },
-              required: ["eyeContact", "voiceModulation", "facialExpression"]
+              required: ["paceScore", "paceDescription", "energyLevel", "fillerWordsLevel"]
             },
             strengths: { 
               type: Type.ARRAY, 
               items: { 
                 type: Type.OBJECT,
-                properties: {
-                  title: { type: Type.STRING },
-                  description: { type: Type.STRING }
-                }
+                properties: { title: { type: Type.STRING }, description: { type: Type.STRING } }
               } 
             },
             weaknesses: { 
               type: Type.ARRAY, 
               items: { 
                 type: Type.OBJECT,
-                properties: {
-                  title: { type: Type.STRING },
-                  description: { type: Type.STRING }
-                }
+                properties: { title: { type: Type.STRING }, description: { type: Type.STRING } }
               } 
             },
-            improvementAreas: { 
+            growthRoadmap: { 
               type: Type.ARRAY, 
               items: { 
                 type: Type.OBJECT,
-                properties: {
-                  title: { type: Type.STRING },
-                  description: { type: Type.STRING }
-                }
+                properties: { step: { type: Type.NUMBER }, goal: { type: Type.STRING }, action: { type: Type.STRING } }
               } 
             },
             aiVision: { type: Type.STRING }
           },
-          required: ["feedback", "scores", "biometrics", "strengths", "weaknesses", "improvementAreas", "aiVision"]
+          required: ["feedback", "scores", "speechAnalysis", "strengths", "weaknesses", "growthRoadmap", "aiVision"]
         }
       }
     });
-
-    // Access response.text property directly
     return JSON.parse(response.text || "{}");
   } catch (error) {
-    return {
-      feedback: "You're doing great!",
-      scores: { communication: 85, confidence: 80, teamwork: 82, problemSolving: 78 },
-      biometrics: { eyeContact: 88, voiceModulation: 82, facialExpression: 85 },
-      strengths: [{ title: "Friendly Tone", description: "You are very welcoming." }],
-      weaknesses: [{ title: "Structure", description: "Keep practicing!" }],
-      improvementAreas: [{ title: "Detail", description: "Try adding one more sentence." }],
-      aiVision: "Future Leader"
-    };
+    console.error("Assessment Error:", error);
+    return null;
   }
 };
